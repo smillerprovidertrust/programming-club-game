@@ -1,12 +1,21 @@
 public class SurvivorsEncounter implements Encounter
 {
-    public void beginEncounter()
+    private Player player;
+
+    public EncounterResult encounter(World world, Player playerInEncounter)
     {
-        Player.tell ("You come across other survivors");
+        player = playerInEncounter;
+        player.tell("You come across other survivors");
+
+        EncounterResult result = new EncounterResult();
+        result.playerIsAlive = nextTurn(world);
+
+        return result;
     }
 
-    public boolean encounter(World world) {
-        String attackOrHelp = Player.ask("Do you want to attack or help?");
+    public boolean nextTurn(World world)
+    {
+        String attackOrHelp = player.ask("Do you want to attack or help?");
 
         if (attackOrHelp.equalsIgnoreCase("attack"))
         {
@@ -18,6 +27,7 @@ public class SurvivorsEncounter implements Encounter
         }
         else
         {
+            player.tell("You " + attackOrHelp + " and leave the survivors behind.");
             return true;
         }
 
@@ -27,17 +37,17 @@ public class SurvivorsEncounter implements Encounter
         int roll = Dice.d20();
         if (roll <= 2)
         {
-            Player.tell("The Survivors tricked and killed you");
+            player.tell("The Survivors tricked and killed you");
             return false;
         }
         else if (roll <= 15)
         {
-            Player.tell("The Survivors need medicine");
+            player.tell("The Survivors need medicine");
             return processMedicine(world);
         }
         else
         {
-            Player.tell("The survivors have a a car");
+            player.tell("The survivors have a a car");
             world.daysRemaining--;
             return true;
         }
@@ -48,12 +58,12 @@ public class SurvivorsEncounter implements Encounter
         int roll = Dice.d20();
         if (roll <= 2)
         {
-            Player.tell("The Survivors disease infects you");
+            player.tell("The Survivors disease infects you");
             return false;
         }
         else if (roll < 8)
         {
-            Player.tell("The Survivors recover but are weak");
+            player.tell("The Survivors recover but are weak");
             int daysRemaining = world.lastDay + world.daysRemaining;
 
             world.lastDay+= daysRemaining;
@@ -61,7 +71,7 @@ public class SurvivorsEncounter implements Encounter
         }
         else
         {
-            Player.tell("The survivors recover completely");
+            player.tell("The survivors recover completely");
             return true;
         }
 
@@ -72,42 +82,42 @@ public class SurvivorsEncounter implements Encounter
         int roll = Dice.d20();
         if (roll <= 2)
         {
-            Player.tell("The Survivors killed you");
+            player.tell("The Survivors killed you");
             return false;
         }
         else if (roll < 8)
         {
-            Player.tell("The Survivors Surrender");
+            player.tell("The Survivors Surrender");
             return processCaptives();
         }
         else if (roll < 15)
         {
-            Player.tell("You kill the Survivors");
+            player.tell("You kill the Survivors");
             return true;
         }
         else
         {
-            Player.tell("You both miss. The fight continue!");
-            return encounter(world);
+            player.tell("You both miss. The fight continue!");
+            return nextTurn(world);
         }
     }
     private boolean processCaptives()
     {
-        String roborJoin = Player.ask("Do you want to rob or join?");
+        String roborJoin = player.ask("Do you want to rob or join?");
 
         if (roborJoin.equalsIgnoreCase("rob"))
         {
-            Player.tell ("You gain money and lose your integrity");
+            player.tell ("You gain money and lose your integrity");
             return true;
         }
         else if (roborJoin.equalsIgnoreCase("join"))
         {
-            Player.tell ("Yay new friends");
+            player.tell ("Yay new friends");
             return true;
         }
         else
         {
-            Player.tell ("You must choose rob or join");
+            player.tell ("You must choose rob or join");
             return processCaptives();
         }
 

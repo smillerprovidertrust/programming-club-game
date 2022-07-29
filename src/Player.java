@@ -1,8 +1,11 @@
+import java.net.InetAddress;
 import java.util.Scanner;
 
 public class Player
 {
-    public static String ask(String question)
+    public int hitpoints = 10;
+
+    public String ask(String question)
     {
         Scanner sc = new Scanner(System.in);
         System.out.println(question);
@@ -10,8 +13,13 @@ public class Player
         return response;
     }
 
-    public static void tell(String statement)
+    public void tell(String statement)
     {
         System.out.println(statement);
+    }
+
+    public boolean isAlive()
+    {
+        return hitpoints > 0;
     }
 }

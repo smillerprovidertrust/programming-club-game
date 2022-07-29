@@ -1,16 +1,20 @@
 public class ZombieEncounter implements Encounter
 {
+    private Player player;
 
     @Override
-    public void beginEncounter()
+    public EncounterResult encounter(World world, Player playerInEncounter)
     {
-        Player.tell("You encountered a zombie.");
+        player = playerInEncounter;
+        player.tell("You encountered a zombie.");
+        EncounterResult result = new EncounterResult();
+        result.playerIsAlive = nextTurn(world);
+        return result;
     }
 
-    @Override
-    public boolean encounter(World world)
+    public boolean nextTurn(World world)
     {
-        String attackOrRun = Player.ask("Do you want to attack or run?");
+        String attackOrRun = player.ask("Do you want to attack or run?");
 
         if (attackOrRun.equalsIgnoreCase("attack"))
         {
@@ -31,12 +35,12 @@ public class ZombieEncounter implements Encounter
         int roll = Dice.d20();
         if (roll >= 20)
         {
-            Player.tell("The zombie didn't notice you");
+            player.tell("The zombie didn't notice you");
             return true;
         }
         else
         {
-            Player.tell("The Zombie Killed you");
+            player.tell("The Zombie Killed you");
             return false;
         }
     }
@@ -45,18 +49,18 @@ public class ZombieEncounter implements Encounter
         int roll = Dice.d20();
         if (roll <= 2)
         {
-            Player.tell("The zombie killed you");
+            player.tell("The zombie killed you");
             return false;
         }
         else if (roll < 12)
         {
-            Player.tell("You escaped the zombie");
+            player.tell("You escaped the zombie");
             return true;
         }
         else
         {
-            Player.tell("Its right behind you!");
-            return encounter(world);
+            player.tell("Its right behind you!");
+            return nextTurn(world);
         }
     }
 
@@ -65,18 +69,22 @@ public class ZombieEncounter implements Encounter
         int roll = Dice.d20();
         if (roll <= 2)
         {
-            Player.tell("The zombie killed you");
-            return false;
+            player.tell("The zombie bit you");
+            player.hitpoints--;
+            if (player.hitpoints <= 0)
+                return false;
+            else
+                return nextTurn(world);
         }
         else if (roll < 12)
         {
-            Player.tell("You killed the zombie");
+            player.tell("You killed the zombie");
             return true;
         }
         else
         {
-            Player.tell("You both miss. The fight continue!");
-            return encounter(world);
+            player.tell("You both miss. The fight continue!");
+            return nextTurn(world);
         }
     }
 }

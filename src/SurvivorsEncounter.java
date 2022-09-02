@@ -64,6 +64,7 @@ public class SurvivorsEncounter implements Encounter
 
             if (attackOrHelp.equalsIgnoreCase("yes")
                     || attackOrHelp.equalsIgnoreCase("sure")) {
+                player.backpack.removeItem(ItemType.MEDICINE);
                 return processGivingMedicine(world);
             }
         }

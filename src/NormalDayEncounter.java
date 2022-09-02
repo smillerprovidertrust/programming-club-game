@@ -32,7 +32,7 @@ public class NormalDayEncounter implements Encounter
             else
             {
                 player.tell("You found a bottle of medicine near your campsite!");
-                Item medicine = new Item(ItemType.MEDICINE);
+                Item medicine = new Item(ItemType.MEDICINE, "A bottle of medicine");
                 player.backpack.addItem(medicine);
                 world.daysRemaining++;
                 result.playerIsAlive = true;
@@ -51,11 +51,11 @@ public class NormalDayEncounter implements Encounter
         {
             encountersToResolve.add(new ZombieEncounter());
         }
-        else if (result <=15)
+        else if (result <=5)
         {
             encountersToResolve.add(new SurvivorsEncounter());
         }
-        else if (result <=18)
+        else if (result <=15)
         {
             encountersToResolve.add(new RandomGuyEncounter());
         }

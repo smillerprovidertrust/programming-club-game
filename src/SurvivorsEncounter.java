@@ -1,3 +1,6 @@
+import player.ItemType;
+import player.Player;
+
 public class SurvivorsEncounter implements Encounter
 {
     private Player player;
@@ -55,6 +58,25 @@ public class SurvivorsEncounter implements Encounter
     }
 
     private boolean processMedicine(World world) {
+
+        if (player.backpack.contains(ItemType.MEDICINE)) {
+            String attackOrHelp = player.ask("Do you want to give them medicine?");
+
+            if (attackOrHelp.equalsIgnoreCase("yes")
+                    || attackOrHelp.equalsIgnoreCase("sure")) {
+                player.backpack.removeItem(ItemType.MEDICINE);
+                return processGivingMedicine(world);
+            }
+        }
+
+        //No medicine
+        player.tell("You don't have any medicine to give them. A survivor child dies in your arms.");
+        player.increaseTrauma();
+        return true;
+    }
+
+    private boolean processGivingMedicine(World world)
+    {
         int roll = Dice.d20();
         if (roll <= 2)
         {

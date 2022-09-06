@@ -1,8 +1,18 @@
+package player;
+
 import java.util.Scanner;
 
 public class Player
 {
     public int hitpoints = 10;
+    public final Backpack backpack;
+    private int trauma;
+
+    public Player()
+    {
+        backpack = new Backpack();
+        trauma = 0;
+    }
 
     public String ask(String question)
     {
@@ -20,5 +30,10 @@ public class Player
     public boolean isAlive()
     {
         return hitpoints > 0;
+    }
+
+    public void increaseTrauma()
+    {
+        trauma++;
     }
 }

@@ -1,3 +1,7 @@
+import player.Item;
+import player.ItemType;
+import player.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +23,20 @@ public class NormalDayEncounter implements Encounter
         }
         else
         {
-            player.tell("You rest all day and you feel great");
-            world.daysRemaining++;
-            result.playerIsAlive = true;
+            if (Dice.d20() < 18)
+            {
+                player.tell("You rest all day and you feel great");
+                world.daysRemaining++;
+                result.playerIsAlive = true;
+            }
+            else
+            {
+                player.tell("You found a bottle of medicine near your campsite!");
+                Item medicine = new Item(ItemType.MEDICINE, "A bottle of medicine");
+                player.backpack.addItem(medicine);
+                world.daysRemaining++;
+                result.playerIsAlive = true;
+            }
         }
 
         return result;

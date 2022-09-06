@@ -1,3 +1,5 @@
+import player.Player;
+
 public class ZombieEncounter implements Encounter
 {
     private Player player;
